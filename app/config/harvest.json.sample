@@ -1,0 +1,10 @@
+{
+    "harvest": {
+        "url": "http://YOUR_COMPANY.harvestapp.com/",
+        "username": "YOUR_EMAIL",
+        "password": "YOUR_PASSWORD"
+    },
+    "cache": {
+        "path": "/tmp/harvest.cache"
+    }
+}

@@ -1,0 +1,19 @@
+{% extends 'templates/default.html.twig' %}
+
+{% block content %}
+    {% for entry in daily %}
+        <div class="entry {% if entry.getTimerStartedAt %}active{% endif %}">
+            <div class="client">{{ entry.getClient }}</div>
+            <div class="project" title="{{ entry.getProjectId }}">{{ entry.getProject }}</div>
+            <div class="task" title="{{ entry.getTaskId }}">{{ entry.getTask }}</div>
+            <div class="created-date">Created: {{ entry.getCreatedAt | date }}</div>
+            <div class="updated-date">Updated: {{ entry.getUpdatedAt | date }}</div>
+            <div class="notes">{{ entry.getNotes }}</div>
+            {% if entry.getTimerStartedAt %}
+                <div class="timer active" title="Started at {{ entry.getTimerStartedAt | date }}: {{ entry.getHours }}">{{ entry.getTime }}</div>
+            {% else %}
+                <div class="timer" title="{{ entry.getHours }}">{{ entry.getTime }}</div>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,72 @@
+@black: black;
+@silver: rgb(150, 150, 150);
+
+@event-border-color: #ddd;
+@event-active-border-color: blue;
+@event-text-color: @silver;
+@project-text-color: @black;
+
+@active-timer-color: blue;
+
+html, body {
+  font-family: "Helvetica Neue", "Arial", sans-serif;
+}
+
+.box-shadow (@color) {
+  -webkit-box-shadow: 5px 5px 5px 0px @color;
+  -moz-box-shadow:    5px 5px 5px 0px @color;
+  box-shadow:         5px 5px 5px 0px @color;
+}
+
+.entry {
+  border: 1px solid @event-border-color;
+  border-left-width: 5px;
+
+  .box-shadow(fadeout(@event-border-color, 40%));
+  width: 450px;
+  position: relative;
+  margin: 5px auto;
+  padding: 10px;
+  font-size: small;
+  color: @event-text-color;
+
+  &.active {
+    border-left-color: @event-active-border-color;
+  }
+
+  .client {
+    font-weight: bold;
+  }
+
+  .project {
+    color: @project-text-color;
+    font-size: large;
+    font-weight: bold;
+  }
+
+  .task {
+    font-weight: bold;
+  }
+
+  .created-date {
+    margin-top: 5px;
+  }
+
+  .updated-date {
+    margin-bottom: 5px;
+  }
+
+  .notes {
+  }
+
+  .timer {
+    font-size: x-large;
+    position: absolute;
+    right: 5px;
+    top: 15px;
+
+    &.active {
+      color: @active-timer-color;
+    }
+  }
+}
