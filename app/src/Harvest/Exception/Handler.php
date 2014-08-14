@@ -29,9 +29,9 @@ class Handler
         try {
             echo $this->app['viewService']->render(
                 'error.html.twig',
-                [
+                array(
                     'exception' => $exception,
-                ]
+                )
             );
         } catch (\Exception $e) {
             echo (string) $e;
