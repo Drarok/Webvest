@@ -8,7 +8,7 @@ $app['exceptionHandler']->install();
 
 echo $app['viewService']->render(
     'index.html.twig',
-    [
+    array(
         'daily' => $app['client']->getDaily(),
-    ]
+    )
 );

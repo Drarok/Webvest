@@ -4,5 +4,6 @@
     <div class="error">
         <h2>Unhandled Exception</h2>
         <p>{{ exception.getMessage }}</p>
+        <pre>{{ exception.getTraceAsString }}
     </div>
 {% endblock %}

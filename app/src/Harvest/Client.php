@@ -2,7 +2,7 @@
 
 namespace Harvest;
 
-use GuzzleHttp\Client as HttpClient;
+use Guzzle\Http\Client as HttpClient;
 
 class Client
 {
@@ -29,13 +29,15 @@ class Client
      */
     public function __construct($url, $username, $password)
     {
-        $this->client = new HttpClient([
-            'base_url' => $url,
-            'defaults' => [
-                'headers' => ['accept' => 'application/json'],
-                'auth'    => [$username, $password],
-            ],
-        ]);
+        $this->client = new HttpClient(
+            $url,
+            array(
+                HttpClient::REQUEST_OPTIONS => array(
+                    'headers' => array('accept' => 'application/json'),
+                    'auth'    => array($username, $password),
+                ),
+            )
+        );
     }
 
     /**
@@ -64,10 +66,10 @@ class Client
             return $cached;
         }
 
-        $response = $this->client->get($cacheKey);
+        $response = $this->client->get($cacheKey)->send();
         $json = json_decode($response->getBody(true), true);
 
-        $result = [];
+        $result = array();
         foreach ($json['day_entries'] as $jsonEntry) {
             $result[] = new Entry($jsonEntry);
         }
