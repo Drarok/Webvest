@@ -3,6 +3,7 @@
 
 @event-border-color: #ddd;
 @event-active-border-color: blue;
+@event-latest-background-color: rgba(200, 200, 255, 0.2);
 @event-text-color: @silver;
 @project-text-color: @black;
 
@@ -29,6 +30,10 @@ html, body {
   padding: 10px;
   font-size: small;
   color: @event-text-color;
+
+  &.latest-entry {
+    background-color: @event-latest-background-color;
+  }
 
   &.active {
     border-left-color: @event-active-border-color;
