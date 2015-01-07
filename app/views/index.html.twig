@@ -2,7 +2,7 @@
 
 {% block content %}
     {% for entry in daily %}
-        <div class="entry {% if entry.getTimerStartedAt %}active{% endif %}">
+        <div class="entry {% if entry.getTimerStartedAt %}active{% endif %} {% if entry.id == mostRecentEntryId %}latest-entry{% endif %}">
             <div class="client">{{ entry.getClient }}</div>
             <div class="project" title="{{ entry.getProjectId }}">{{ entry.getProject }}</div>
             <div class="task" title="{{ entry.getTaskId }}">{{ entry.getTask }}</div>
