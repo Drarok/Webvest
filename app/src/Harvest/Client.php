@@ -2,7 +2,11 @@
 
 namespace Harvest;
 
+use DateTime;
+
 use Guzzle\Http\Client as HttpClient;
+
+use Harvest\Cache\CacheInterface;
 
 class Client
 {
@@ -23,11 +27,12 @@ class Client
     /**
      * Constructor.
      *
-     * @param string $url      Harvest URL.
-     * @param string $username Username.
-     * @param string $password Password.
+     * @param string         $url      Harvest URL.
+     * @param string         $username Username.
+     * @param string         $password Password.
+     * @param CacheInterface $cache    Cache instance.
      */
-    public function __construct($url, $username, $password)
+    public function __construct($url, $username, $password, CacheInterface $cache)
     {
         $this->client = new HttpClient(
             $url,
@@ -35,19 +40,22 @@ class Client
                 HttpClient::REQUEST_OPTIONS => array(
                     'headers' => array('accept' => 'application/json'),
                     'auth'    => array($username, $password),
+                    'verify'  => false,
                 ),
             )
         );
+
+        $this->setCache($cache);
     }
 
     /**
      * Setter for the cache.
      *
-     * @param Cache\CacheInterface $cache Cache instance.
+     * @param CacheInterface $cache Cache instance.
      *
      * @return $this
      */
-    public function setCache(Cache\CacheInterface $cache)
+    public function setCache(CacheInterface $cache)
     {
         $this->cache = $cache;
         return $this;
@@ -56,18 +64,25 @@ class Client
     /**
      * Get "daily" timers.
      *
+     * @param DateTime $date Optional date, defaults to today.
+     *
      * @return array
      */
-    public function getDaily()
+    public function getDaily(DateTime $date = null)
     {
-        $cacheKey = '/daily';
+        if ($date === null) {
+            $date = new DateTime();
+        }
 
-        if ($this->cache && ($cached = $this->cache->get($cacheKey))) {
+        $cacheKey = 'daily-' . $date->format('Y-m-d');
+
+        if ($cached = $this->cache->get($cacheKey)) {
             return $cached;
         }
 
-        $response = $this->client->get($cacheKey)->send();
-        $json = json_decode($response->getBody(true), true);
+        $rawDaily = $this->fetchDaily($date);
+
+        $json = json_decode($rawDaily, true);
 
         $result = array();
         foreach ($json['day_entries'] as $jsonEntry) {
@@ -79,5 +94,22 @@ class Client
         }
 
         return $result;
+    }
+
+    /**
+     * Fetch the /daily endpoint.
+     *
+     * @return string
+     */
+    protected function fetchDaily(DateTime $date)
+    {
+        $path = sprintf(
+            '/daily/%d/%d',
+            (int) $date->format('z') + 1,
+            (int) $date->format('Y')
+        );
+        $rawDaily = $this->client->get($path)->send()->getBody(true);
+        $this->cache->set('GET /daily', $rawDaily);
+        return $rawDaily;
     }
 }
