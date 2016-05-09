@@ -109,7 +109,6 @@ class Client
             (int) $date->format('Y')
         );
         $rawDaily = $this->client->get($path)->send()->getBody(true);
-        $this->cache->set('GET /daily', $rawDaily);
         return $rawDaily;
     }
 }
