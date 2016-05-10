@@ -9,6 +9,7 @@
 
   <script>
     var targetPerDay = {{ targetPerDay }};
+    var loggedHours = {{ loggedHours | json_encode | raw }};
   </script>
 {% endblock %}
 
