@@ -1,5 +1,18 @@
 {% extends 'templates/default.html.twig' %}
 
 {% block content %}
+  <div>
     There are {{ workingDays }} working days this month, meaning your target is {{ targetPerDay }} hours per day.
+  </div>
+
+  <canvas id="chart"></canvas>
+
+  <script>
+    var targetPerDay = {{ targetPerDay }};
+  </script>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.2/Chart.min.js"></script>
+  <script src="/js/target-hours.js"></script>
 {% endblock %}
