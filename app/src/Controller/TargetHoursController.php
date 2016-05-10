@@ -15,9 +15,11 @@ class TargetHoursController extends AbstractController
     protected function getData(): array
     {
         $days = $this->getWorkingDays();
+
         return [
             'workingDays'  => $days,
             'targetPerDay' => sprintf('%.3f', 100 / $days),
+            'loggedHours'  => $this->getLoggedHours(),
         ];
     }
 
@@ -42,5 +44,28 @@ class TargetHoursController extends AbstractController
         }
 
         return $weekdays + 20;
+    }
+
+    protected function getLoggedHours()
+    {
+        $d = (int)date('j');
+        $m = (int)date('m');
+        $y = (int)date('Y');
+
+        $loggedHours = [];
+        $totalHours = 0;
+        for ($i = 1; $i <= $d; ++$i) {
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', sprintf('%d-%d-%d 00:00:00', $y, $m, $i));
+            foreach ($this->app['client']->getDaily($date) as $entry) {
+                if (strtolower(substr($entry->getNotes(), 0, 9)) == 'overtime:') {
+                    continue;
+                }
+
+                $totalHours += $entry->getHours();
+            }
+            $loggedHours[] = $totalHours;
+        }
+
+        return $loggedHours;
     }
 }
