@@ -5,6 +5,7 @@
         "password": "YOUR_PASSWORD"
     },
     "cache": {
-        "path": "/tmp/harvest.cache"
+        "path": "/tmp/harvest.cache",
+        "expiry": 600
     }
 }

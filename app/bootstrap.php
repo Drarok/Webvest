@@ -25,7 +25,7 @@ $app['client'] = $app->share(function ($app) {
         $config->harvest->url,
         $config->harvest->username,
         $config->harvest->password,
-        new Harvest\Cache\Filesystem($config->cache->path, 60)
+        new Harvest\Cache\Filesystem($config->cache->path, $config->cache->expiry)
     );
 
     return $client;
