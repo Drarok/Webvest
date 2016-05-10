@@ -89,9 +89,7 @@ class Client
             $result[] = new Entry($jsonEntry);
         }
 
-        if ($this->cache) {
-            $this->cache->set($cacheKey, $result);
-        }
+        $this->cache->set($cacheKey, $result);
 
         return $result;
     }
