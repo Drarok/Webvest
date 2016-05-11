@@ -24,7 +24,7 @@ class IndexController extends AbstractController
 
         $mostRecentEntryId = false;
         $mostRecentDate = null;
-        foreach ($daily as $entry) {
+        foreach ($daily->getDayEntries() as $entry) {
             if ($mostRecentDate === null) {
                 $mostRecentDate = $entry->getUpdatedAt();
                 $mostRecentEntryId = $entry->getId();

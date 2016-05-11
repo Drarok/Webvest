@@ -56,7 +56,7 @@ class TargetHoursController extends AbstractController
         $totalHours = 0;
         for ($i = 1; $i <= $d; ++$i) {
             $date = DateTime::createFromFormat('Y-m-d H:i:s', sprintf('%d-%d-%d 00:00:00', $y, $m, $i));
-            foreach ($this->app['client']->getDaily($date) as $entry) {
+            foreach ($this->app['client']->getDaily($date)->getDayEntries() as $entry) {
                 if (strtolower(substr($entry->getNotes(), 0, 9)) == 'overtime:') {
                     continue;
                 }

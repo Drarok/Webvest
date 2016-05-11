@@ -1,18 +1,18 @@
 {% extends 'templates/default.html.twig' %}
 
 {% block content %}
-    {% for entry in daily %}
-        <div class="entry {% if entry.getTimerStartedAt %}active{% endif %} {% if entry.id == mostRecentEntryId %}latest-entry{% endif %}">
-            <div class="client">{{ entry.getClient }}</div>
-            <div class="project" title="{{ entry.getProjectId }}">{{ entry.getProject }}</div>
-            <div class="task" title="{{ entry.getTaskId }}">{{ entry.getTask }}</div>
-            <div class="created-date">Created: {{ entry.getCreatedAt | date }}</div>
-            <div class="updated-date">Updated: {{ entry.getUpdatedAt | date }}</div>
-            <div class="notes">{{ entry.getNotes }}</div>
-            {% if entry.getTimerStartedAt %}
-                <div class="timer active" title="Started at {{ entry.getTimerStartedAt | date }}: {{ entry.getHours }}">{{ entry.getTime }}</div>
+    {% for entry in daily.dayEntries %}
+        <div class="entry {% if entry.timerStartedAt %}active{% endif %} {% if entry.id == mostRecentEntryId %}latest-entry{% endif %}">
+            <div class="client">{{ entry.client }}</div>
+            <div class="project" title="{{ entry.projectId }}">{{ entry.project }}</div>
+            <div class="task" title="{{ entry.taskId }}">{{ entry.task }}</div>
+            <div class="created-date">Created: {{ entry.createdAt | date }}</div>
+            <div class="updated-date">Updated: {{ entry.updatedAt | date }}</div>
+            <div class="notes">{{ entry.notes }}</div>
+            {% if entry.timerStartedAt %}
+                <div class="timer active" title="Started at {{ entry.timerStartedAt | date }}: {{ entry.hours }}">{{ entry.time }}</div>
             {% else %}
-                <div class="timer" title="{{ entry.getHours }}">{{ entry.getTime }}</div>
+                <div class="timer" title="{{ entry.hours }}">{{ entry.time }}</div>
             {% endif %}
         </div>
     {% endfor %}
