@@ -76,22 +76,14 @@ class Client
 
         $cacheKey = 'daily-' . $date->format('Y-m-d');
 
-        if ($cached = $this->cache->get($cacheKey)) {
-            return $cached;
+
+        if (!($json = $this->cache->get($cacheKey))) {
+            $rawDaily = $this->fetchDaily($date);
+            $json = json_decode($rawDaily, true);
+            $this->cache->set($cacheKey, $json);
         }
 
-        $rawDaily = $this->fetchDaily($date);
-
-        $json = json_decode($rawDaily, true);
-
-        $result = array();
-        foreach ($json['day_entries'] as $jsonEntry) {
-            $result[] = new Entry($jsonEntry);
-        }
-
-        $this->cache->set($cacheKey, $result);
-
-        return $result;
+        return new Daily($json);
     }
 
     /**

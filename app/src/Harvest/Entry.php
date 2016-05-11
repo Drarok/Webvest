@@ -2,7 +2,9 @@
 
 namespace Harvest;
 
-class Entry implements \Serializable
+use DateTime;
+
+class Entry
 {
     /**
      * Timer start date time.
@@ -95,60 +97,23 @@ class Entry implements \Serializable
      */
     protected $hours;
 
-    public function __construct(array $data = null)
+    public function __construct(array $data)
     {
-        if ($data) {
-            $this->fromArray($data);
+        if (isset($data['timer_started_at'])) {
+            $this->timerStartedAt = DateTime::createFromFormat(DateTime::ISO8601, $data['timer_started_at']);
         }
-    }
 
-    public function serialize()
-    {
-        return serialize($this->toArray());
-    }
-
-    public function toArray()
-    {
-        return array(
-            'timer_started_at'    => $this->timerStartedAt ? $this->timerStartedAt->format(\DateTime::ISO8601) : null,
-            'project_id'          => $this->projectId,
-            'project'             => $this->project,
-            'user_id'             => $this->userId,
-            'spent_at'            => $this->spentAt ? $this->spentAt->format(\DateTime::ISO8601) : null,
-            'task_id'             => $this->taskId,
-            'task'                => $this->task,
-            'client'              => $this->client,
-            'id'                  => $this->id,
-            'notes'               => $this->notes,
-            'created_at'          => $this->createdAt->format(\DateTime::ISO8601),
-            'updated_at'          => $this->updatedAt->format(\DateTime::ISO8601),
-            'hours_without_timer' => $this->hoursWithoutTimer,
-            'hours'               => $this->hours,
-        );
-    }
-
-    public function unserialize($data)
-    {
-        $data = unserialize($data);
-        $this->fromArray($data);
-    }
-
-    public function fromArray(array $data)
-    {
-        if (array_key_exists('timer_started_at', $data)) {
-            $this->timerStartedAt    = \DateTime::createFromFormat(\DateTime::ISO8601, $data['timer_started_at']);
-        }
         $this->projectId         = $data['project_id'];
         $this->project           = $data['project'];
         $this->userId            = $data['user_id'];
-        $this->spentAt           = \DateTime::createFromFormat(\DateTime::ISO8601, $data['spent_at']);
+        $this->spentAt           = DateTime::createFromFormat(DateTime::ISO8601, $data['spent_at']);
         $this->taskId            = $data['task_id'];
         $this->task              = $data['task'];
         $this->client            = $data['client'];
         $this->id                = $data['id'];
         $this->notes             = $data['notes'];
-        $this->createdAt         = \DateTime::createFromFormat(\DateTime::ISO8601, $data['created_at']);
-        $this->updatedAt         = \DateTime::createFromFormat(\DateTime::ISO8601, $data['updated_at']);
+        $this->createdAt         = DateTime::createFromFormat(DateTime::ISO8601, $data['created_at']);
+        $this->updatedAt         = DateTime::createFromFormat(DateTime::ISO8601, $data['updated_at']);
         $this->hoursWithoutTimer = $data['hours_without_timer'];
         $this->hours             = $data['hours'];
     }
@@ -156,7 +121,7 @@ class Entry implements \Serializable
     /**
      * Gets the Timer start datetime.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getTimerStartedAt()
     {
@@ -170,7 +135,7 @@ class Entry implements \Serializable
      */
     public function getTimerStartedAtString()
     {
-        return $this->timerStartedAt ? $this->timerStartedAt->format(\DateTime::ISO8601) : null;
+        return $this->timerStartedAt ? $this->timerStartedAt->format(DateTime::ISO8601) : null;
     }
 
     /**
@@ -196,7 +161,7 @@ class Entry implements \Serializable
     /**
      * Gets the Date the time was spent.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getSpentAt()
     {
@@ -256,7 +221,7 @@ class Entry implements \Serializable
     /**
      * Gets the Created datetime.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -270,13 +235,13 @@ class Entry implements \Serializable
      */
     public function getCreatedAtString()
     {
-        return $this->createdAt ? $this->createdAt->format(\DateTime::ISO8601) : null;
+        return $this->createdAt ? $this->createdAt->format(DateTime::ISO8601) : null;
     }
 
     /**
      * Gets the Updated datetime.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdatedAt()
     {
@@ -290,7 +255,7 @@ class Entry implements \Serializable
      */
     public function getUpdatedAtString()
     {
-        return $this->updatedAt ? $this->updatedAt->format(\DateTime::ISO8601) : null;
+        return $this->updatedAt ? $this->updatedAt->format(DateTime::ISO8601) : null;
     }
 
     /**
