@@ -63,19 +63,14 @@ class Client
 
     /**
      * Get "daily" timers.
-     *
-     * @param DateTime $date Optional date, defaults to today.
-     *
-     * @return array
      */
-    public function getDaily(DateTime $date = null)
+    public function getDaily(DateTime $date = null): Daily
     {
         if ($date === null) {
             $date = new DateTime();
         }
 
         $cacheKey = 'daily-' . $date->format('Y-m-d');
-
 
         if (!($json = $this->cache->get($cacheKey))) {
             $rawDaily = $this->fetchDaily($date);
@@ -87,18 +82,59 @@ class Client
     }
 
     /**
+     * Get timer entries for a particular user between two dates.
+     */
+    public function getEntriesForUser(int $userId, DateTime $fromDate, DateTime $toDate): array
+    {
+        $cacheKey = sprintf(
+            'people-%d-entries-%s-%s',
+            $userId,
+            $fromDate->format('Ymd'),
+            $toDate->format('Ymd')
+        );
+
+        if (!($json = $this->cache->get($cacheKey))) {
+            $raw = $this->fetchEntriesForUser($userId, $fromDate, $toDate);
+            $json = json_decode($raw, true);
+            $this->cache->set($cacheKey, $json);
+        }
+
+        return array_map(
+            function ($data): Entry {
+                return new Entry($data['day_entry'] ?? []);
+            },
+            $json
+        );
+    }
+
+    /**
      * Fetch the /daily endpoint.
      *
      * @return string
      */
-    protected function fetchDaily(DateTime $date)
+    protected function fetchDaily(DateTime $date): string
     {
         $path = sprintf(
             '/daily/%d/%d',
             (int) $date->format('z') + 1,
             (int) $date->format('Y')
         );
-        $rawDaily = $this->client->get($path)->send()->getBody(true);
-        return $rawDaily;
+
+        return $this->client->get($path)->send()->getBody(true);
+    }
+
+    /**
+     * Fetch the entries data from the API.
+     */
+    protected function fetchEntriesForUser(int $userId, DateTime $fromDate, DateTime $toDate): string
+    {
+        $path = sprintf(
+            '/people/%d/entries?from=%s&to=%s&billable=yes',
+            $userId,
+            $fromDate->format('Ymd'),
+            $toDate->format('Ymd')
+        );
+
+        return $this->client->get($path)->send()->getBody(true);
     }
 }
