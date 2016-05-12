@@ -48,21 +48,35 @@ class TargetHoursController extends AbstractController
 
     protected function getLoggedHours()
     {
-        $d = (int)date('j');
-        $m = (int)date('m');
-        $y = (int)date('Y');
+        $fromDate = DateTime::createFromFormat('Ymd', date('Ym') . '01');
+        $toDate = new DateTime();
 
-        $loggedHours = [];
-        $totalHours = 0;
-        for ($i = 1; $i <= $d; ++$i) {
-            $date = DateTime::createFromFormat('Y-m-d H:i:s', sprintf('%d-%d-%d 00:00:00', $y, $m, $i));
-            foreach ($this->app['client']->getDaily($date)->getDayEntries() as $entry) {
-                if (strtolower(substr($entry->getNotes(), 0, 9)) == 'overtime:') {
-                    continue;
-                }
+        $dailyHours = [];
+        for ($i = 1; $i <= (int)date('j'); ++$i) {
+            $dailyHours[$i] = 0;
+        }
 
-                $totalHours += $entry->getHours();
+        $entries = $this->app['client']->getEntriesForUser(
+            $this->app['config']->harvest->userId,
+            DateTime::createFromFormat('Ymd', date('Ym') . '01'),
+            new DateTime()
+        );
+
+        // Calculate the hours for each day.
+        foreach ($entries as $entry) {
+            // Ignore overtime tasks.
+            if (strtolower(substr($entry->getNotes(), 0, 9)) == 'overtime:') {
+                continue;
             }
+
+            $dailyHours[(int)$entry->getSpentAt()->format('j')] += $entry->getHours();
+        }
+
+        // Return the data in a cumulative array.
+        $totalHours = 0;
+        $loggedHours = [];
+        foreach ($dailyHours as $h) {
+            $totalHours += $h;
             $loggedHours[] = $totalHours;
         }
 
