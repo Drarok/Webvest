@@ -84,17 +84,43 @@ class Client
     /**
      * Get timer entries for a particular user between two dates.
      */
-    public function getEntriesForUser(int $userId, DateTime $fromDate, DateTime $toDate): array
+    public function getEntriesForUser(int $userId, DateTime $fromDate, DateTime $toDate, array $options = []): array
     {
+        $options['from'] = $fromDate->format('Ymd');
+        $options['to'] = $toDate->format('Ymd');
+
+        $allowedOptions = ['from', 'to', 'billable'];
+
+        $options = array_filter(
+            $options,
+            function ($key) use ($allowedOptions) {
+                return in_array($key, $allowedOptions);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+
+        $options = implode(
+            array_map(
+                function ($k, $v) {
+                    if (is_bool($v)) {
+                        $v = $v ? 'yes' : 'no';
+                    }
+                    return sprintf('%s=%s', rawurlencode($k), rawurlencode($v));
+                },
+                array_keys($options),
+                array_values($options)
+            ),
+            '&'
+        );
+
         $cacheKey = sprintf(
-            'people-%d-entries-%s-%s',
+            '/people/%d/entries?%s',
             $userId,
-            $fromDate->format('Ymd'),
-            $toDate->format('Ymd')
+            $options
         );
 
         if (!($json = $this->cache->get($cacheKey))) {
-            $raw = $this->fetchEntriesForUser($userId, $fromDate, $toDate);
+            $raw = $this->client->get($cacheKey)->send()->getBody(true);
             $json = json_decode($raw, true);
             $this->cache->set($cacheKey, $json);
         }
@@ -118,21 +144,6 @@ class Client
             '/daily/%d/%d',
             (int) $date->format('z') + 1,
             (int) $date->format('Y')
-        );
-
-        return $this->client->get($path)->send()->getBody(true);
-    }
-
-    /**
-     * Fetch the entries data from the API.
-     */
-    protected function fetchEntriesForUser(int $userId, DateTime $fromDate, DateTime $toDate): string
-    {
-        $path = sprintf(
-            '/people/%d/entries?from=%s&to=%s&billable=yes',
-            $userId,
-            $fromDate->format('Ymd'),
-            $toDate->format('Ymd')
         );
 
         return $this->client->get($path)->send()->getBody(true);

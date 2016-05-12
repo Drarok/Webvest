@@ -59,7 +59,8 @@ class TargetHoursController extends AbstractController
         $entries = $this->app['client']->getEntriesForUser(
             $this->app['config']->harvest->userId,
             DateTime::createFromFormat('Ymd', date('Ym') . '01'),
-            new DateTime()
+            new DateTime(),
+            ['billable' => true]
         );
 
         // Calculate the hours for each day.
