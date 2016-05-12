@@ -103,19 +103,22 @@ class Entry
             $this->timerStartedAt = DateTime::createFromFormat(DateTime::ISO8601, $data['timer_started_at']);
         }
 
-        $this->projectId         = $data['project_id'];
-        $this->project           = $data['project'];
-        $this->userId            = $data['user_id'];
-        $this->spentAt           = DateTime::createFromFormat(DateTime::ISO8601, $data['spent_at']);
-        $this->taskId            = $data['task_id'];
-        $this->task              = $data['task'];
-        $this->client            = $data['client'];
-        $this->id                = $data['id'];
-        $this->notes             = $data['notes'];
+        $this->projectId         = $data['project_id'] ?? 0;
+        $this->project           = $data['project'] ?? '';
+        $this->userId            = $data['user_id'] ?? 0;
+        $this->spentAt           = DateTime::createFromFormat('Y-m-d', $data['spent_at']);
+        if (!$this->spentAt) {
+            throw new \Exception('Fail: ' . json_encode($data));
+        }
+        $this->taskId            = $data['task_id'] ?? 0;
+        $this->task              = $data['task'] ?? '';
+        $this->client            = $data['client'] ?? '';
+        $this->id                = $data['id'] ?? 0;
+        $this->notes             = $data['notes'] ?? '';
         $this->createdAt         = DateTime::createFromFormat(DateTime::ISO8601, $data['created_at']);
         $this->updatedAt         = DateTime::createFromFormat(DateTime::ISO8601, $data['updated_at']);
-        $this->hoursWithoutTimer = $data['hours_without_timer'];
-        $this->hours             = $data['hours'];
+        $this->hoursWithoutTimer = $data['hours_without_timer'] ?? 0;
+        $this->hours             = $data['hours'] ?? 0;
     }
 
     /**
