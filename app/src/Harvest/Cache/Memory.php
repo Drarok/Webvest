@@ -2,7 +2,7 @@
 
 namespace Harvest\Cache;
 
-class Filesystem implements CacheInterface
+class Memory implements CacheInterface
 {
     /**
      * Cached data.
@@ -40,7 +40,7 @@ class Filesystem implements CacheInterface
      */
     public function get($key)
     {
-        return array_key_exists($key, $this->data) ? $this->data[$key] : false;
+        return $this->data[$key] ?? false;
     }
 
     /**
