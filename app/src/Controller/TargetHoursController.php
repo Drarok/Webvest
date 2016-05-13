@@ -43,6 +43,16 @@ class TargetHoursController extends AbstractController
             }
         }
 
+        // Reduce by number of holidays that fall within this month.
+        $thisMonth = date('Y-m');
+        $holidays = $this->app['config']->holidays;
+        foreach ($holidays as $holiday) {
+            $holiday = DateTime::createFromFormat('Y-m-d', $holiday);
+            if ($holiday->format('Y-m') === $thisMonth) {
+                --$weekdays;
+            }
+        }
+
         return $weekdays + 20;
     }
 
