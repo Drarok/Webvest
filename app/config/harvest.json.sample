@@ -7,5 +7,8 @@
     "cache": {
         "path": "/tmp/harvest.cache",
         "expiry": 600
-    }
+    },
+    "holidays": [
+        "2015-12-24"
+    ]
 }
