@@ -14,46 +14,55 @@ class TargetHoursController extends AbstractController
 
     protected function getData(): array
     {
-        $days = $this->getWorkingDays();
+        $workingDays = $this->getWorkingDays();
+
+        $numberOfWorkingDays = count(array_filter($workingDays));
 
         return [
-            'workingDays'  => $days,
-            'targetPerDay' => sprintf('%.3f', 100 / $days),
-            'loggedHours'  => $this->getLoggedHours(),
+            'workingDays'          => $workingDays,
+            'numberOfWorkingDays'  => $numberOfWorkingDays,
+            'targetPerDay'         => sprintf('%.3f', 100 / $numberOfWorkingDays),
+            'loggedHours'          => $this->getLoggedHours(),
         ];
     }
 
     /**
-     * Logical analysis says the first 28 days _must_ have 20 working days in,
-     * so we only loop over 29 and up, then add 20 at the end.
+     * Get an array; the key is the day number and value represents if it's a
+     * working day or not as a bool.
      *
-     * @return int
+     * @return array
      */
-    protected function getWorkingDays(): int
+    protected function getWorkingDays(): array
     {
-        $m = (int)date('n');
-        $y = (int)date('Y');
+        $m = date('m');
+        $y = date('Y');
+
+        $holidays = $this->app['config']->holidays;
+
+        $workingDays = [];
 
         $weekdays = 0;
         $lastDay = date('t', mktime(0, 0, 0, $m, 1, $y));
-        for ($d = 29; $d <= $lastDay; ++$d) {
-            $wd = date('w', mktime(0, 0, 0, $m, $d, $y));
-            if ($wd > 0 && $wd < 6) {
-                $weekdays++;
+        for ($d = 1; $d <= $lastDay; ++$d) {
+            $currentDay = DateTime::createFromFormat('Y-m-d', sprintf('%d-%d-%d', $y, $m, $d));
+            $wd = $currentDay->format('w');
+
+            // Weekends are never working days.
+            if ($wd == 0 || $wd == 6) {
+                $workingDays[] = false;
+                continue;
             }
+
+            $currentDayString = $currentDay->format('Y-m-d');
+            if (in_array($currentDayString, $holidays)) {
+                $workingDays[] = false;
+                continue;
+            }
+
+            $workingDays[] = true;
         }
 
-        // Reduce by number of holidays that fall within this month.
-        $thisMonth = date('Y-m');
-        $holidays = $this->app['config']->holidays;
-        foreach ($holidays as $holiday) {
-            $holiday = DateTime::createFromFormat('Y-m-d', $holiday);
-            if ($holiday->format('Y-m') === $thisMonth) {
-                --$weekdays;
-            }
-        }
-
-        return $weekdays + 20;
+        return $workingDays;
     }
 
     protected function getLoggedHours()

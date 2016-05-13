@@ -2,6 +2,7 @@
   'use strict';
   // console.log(targetPerDay);
   // console.log(loggedHours);
+  // console.log(workingDays);
 
   var ctx = document.getElementById('chart').getContext('2d');
 
@@ -19,8 +20,7 @@
   for (var i = 1; i <= numberOfDays; ++i) {
     days.push(i);
 
-    var currentDate = new Date(today.getFullYear(), today.getMonth(), i);
-    if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+    if (workingDays[i - 1]) {
       totalHours += targetPerDay;
     }
 

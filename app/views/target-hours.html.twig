@@ -2,13 +2,14 @@
 
 {% block content %}
   <div>
-    There are {{ workingDays }} working days this month, meaning your target is {{ targetPerDay }} hours per day.
+    There are {{ numberOfWorkingDays }} working days this month, meaning your target is {{ targetPerDay }} hours per day.
   </div>
 
   <canvas id="chart"></canvas>
 
   <script>
     var targetPerDay = {{ targetPerDay }};
+    var workingDays = {{ workingDays | json_encode | raw }};
     var loggedHours = {{ loggedHours | json_encode | raw }};
   </script>
 {% endblock %}
