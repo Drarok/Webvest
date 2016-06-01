@@ -2,7 +2,8 @@
 
 {% block content %}
   <div>
-    There are {{ numberOfWorkingDays }} working days this month, meaning your target is {{ targetPerDay }} hours per day.
+    There are {{ numberOfWorkingDays }} working days, at your target of {{ targetPerDay }} hours per day
+    means a total of {{ numberOfWorkingDays * targetPerDay }} hours this month.
   </div>
 
   <canvas id="chart"></canvas>

@@ -21,7 +21,7 @@ class TargetHoursController extends AbstractController
         return [
             'workingDays'          => $workingDays,
             'numberOfWorkingDays'  => $numberOfWorkingDays,
-            'targetPerDay'         => sprintf('%.3f', 100 / $numberOfWorkingDays),
+            'targetPerDay'         => sprintf('%.3f', 7.5 * (2 / 3)),
             'loggedHours'          => $this->getLoggedHours(),
         ];
     }
