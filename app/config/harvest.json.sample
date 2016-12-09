@@ -1,6 +1,7 @@
 {
     "harvest": {
         "url": "http://YOUR_COMPANY.harvestapp.com/",
+        "userId": 123456
         "username": "YOUR_EMAIL",
         "password": "YOUR_PASSWORD"
     },
