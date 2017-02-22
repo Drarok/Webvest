@@ -38,9 +38,9 @@ $app['client'] = $app->share(function ($app) {
 $app['viewService'] = $app->share(function ($app) {
     $twig = new Twig_Environment(
         new Twig_Loader_Filesystem(__DIR__ . '/views'),
-        array(
+        [
             'debug' => true,
-        )
+        ]
     );
 
     $twig->addExtension(new Twig_Extension_Debug());

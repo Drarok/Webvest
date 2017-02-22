@@ -9,7 +9,7 @@ class MemoryCache implements CacheInterface
      *
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * Constructor.

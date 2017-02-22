@@ -30,7 +30,7 @@ class FilesystemCache implements CacheInterface
      *
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * Constructor.
