@@ -4,6 +4,9 @@ error_reporting(E_ALL);
 
 $app = require_once __DIR__ . '/../app/bootstrap.php';
 
+use Controller\IndexController;
+use Controller\ErrorController;
+
 $app['exceptionHandler']->install();
 
 // TODO: Use a proper router.
@@ -14,7 +17,7 @@ $uri = $_SERVER['REQUEST_URI'] ?? '/';
 
 switch ($uri) {
     case '/':
-        $controller = new Controller\IndexController($app);
+        $controller = new IndexController($app);
         break;
 
     case '/target-hours':
@@ -22,7 +25,7 @@ switch ($uri) {
         break;
 
     default:
-        $controller = new Controller\ErrorController($app, $uri);
+        $controller = new ErrorController($app, $uri);
         break;
 }
 
