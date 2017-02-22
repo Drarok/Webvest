@@ -1,8 +1,8 @@
 <?php
 
-namespace Harvest\Cache;
+namespace Webvest\Harvest\Cache;
 
-class Memory implements CacheInterface
+class MemoryCache implements CacheInterface
 {
     /**
      * Cached data.

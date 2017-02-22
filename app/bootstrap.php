@@ -2,10 +2,14 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Webvest\ExceptionHandler;
+use Webvest\Harvest\Cache\FilesystemCache;
+use Webvest\Harvest\Client;
+
 $app = new Pimple();
 
 $app['exceptionHandler'] = $app->share(function ($app) {
-    return new Harvest\Exception\Handler($app);
+    return new ExceptionHandler($app);
 });
 
 $app['config'] = $app->share(function ($app) {
@@ -21,11 +25,11 @@ $app['config'] = $app->share(function ($app) {
 $app['client'] = $app->share(function ($app) {
     $config = $app['config'];
 
-    $client = new Harvest\Client(
+    $client = new Client(
         $config->harvest->url,
         $config->harvest->username,
         $config->harvest->password,
-        new Harvest\Cache\Filesystem($config->cache->path, $config->cache->expiry)
+        new FilesystemCache($config->cache->path, $config->cache->expiry)
     );
 
     return $client;

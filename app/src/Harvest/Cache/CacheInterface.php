@@ -1,6 +1,6 @@
 <?php
 
-namespace Harvest\Cache;
+namespace Webvest\Harvest\Cache;
 
 interface CacheInterface
 {

@@ -9,8 +9,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Controller\\": "app/src/Controller/",
-            "Harvest\\": "app/src/Harvest/"
+            "Webvest\\": "app/src"
         }
     },
     "require": {
