@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Webvest\DataService;
 use Webvest\ExceptionHandler;
 use Webvest\Harvest\Cache\FilesystemCache;
 use Webvest\Harvest\Client;
@@ -48,5 +49,11 @@ $app['viewService'] = $app->share(function ($app) {
 
     return $twig;
 });
+
+$app['dataService'] = $app->share(function ($app) {
+    return new DataService(__DIR__ . '/../var/webvest.sqlite');
+});
+
+$app['dataService'];
 
 return $app;
