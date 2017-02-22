@@ -1,12 +1,11 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 error_reporting(E_ALL);
 
 $app = require_once __DIR__ . '/../app/bootstrap.php';
-
-use Webvest\Controller\IndexController;
-use Webvest\Controller\ErrorController;
-use Webvest\Controller\TargetHoursController;
 
 $app['exceptionHandler']->install();
 
@@ -14,20 +13,22 @@ $app['exceptionHandler']->install();
 // $_SERVER['REQUEST_URI'] => string '/'
 // $_SERVER['REQUEST_URI'] => string '/target-hours'
 
-$uri = $_SERVER['REQUEST_URI'] ?? '/';
+$request = Request::createFromGlobals();
 
-switch ($uri) {
-    case '/':
-        $controller = new IndexController($app);
-        break;
+$path = $request->getPathInfo();
 
-    case '/target-hours':
-        $controller = new TargetHoursController($app);
-        break;
+$controller = '';
+$action = '';
 
-    default:
-        $controller = new ErrorController($app, $uri);
-        break;
+$pathParts = explode('/', substr($path, 1));
+if ($pathParts[0] === '') {
+    $pathParts[0] = 'timers';
 }
+$controller =  'Webvest\\Controller\\' . str_replace('-', '', ucwords($pathParts[0], '-')) . 'Controller';
+$action = ($pathParts[1] ?? 'index') . 'Action';
 
-echo $controller->render();
+$response = [new $controller($app), $action]($request);
+if (!is_object($response) || !($response instanceof Response)) {
+    throw new UnexpectedValueException('Invalid response');
+}
+$response->send();

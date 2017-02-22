@@ -4,15 +4,14 @@ namespace Webvest\Controller;
 
 use DateTime;
 
-class IndexController extends AbstractController
+class TimersController extends AbstractController
 {
-    public function render(): string
+    public function indexAction(): string
     {
-        $data = $this->getData();
-        return $this->app['viewService']->render('index.html.twig', $data);
+        return $this->render('index.html.twig', $this->getData());
     }
 
-    protected function getData(): array
+    private function getCurrentDate(): DateTime
     {
         // If viewing before 07:00, presume it's a little after midnight and show
         // the previous day, which is more likely to have some data.
@@ -20,7 +19,13 @@ class IndexController extends AbstractController
         if ($date->format('H:i:s') < '07:00:00') {
             $date->modify('-1 day');
         }
-        $daily = $this->app['client']->getDaily($date);
+
+        return $date;
+    }
+
+    private function getData(): array
+    {
+        $daily = $this->app['client']->getDaily($this->getCurrentDate());
 
         $mostRecentEntryId = false;
         $mostRecentDate = null;

@@ -16,6 +16,7 @@
         "php": ">=7.0",
         "pimple/pimple": "1.*",
         "guzzle/guzzle": "3.*",
-        "twig/twig": "1.*"
+        "twig/twig": "1.*",
+        "symfony/http-foundation": "^3.2"
     }
 }
