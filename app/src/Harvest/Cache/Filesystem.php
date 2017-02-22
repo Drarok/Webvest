@@ -61,7 +61,7 @@ class Filesystem implements CacheInterface
             return;
         }
 
-        $this->data = unserialize(file_get_contents($this->pathname));
+        $this->data = json_decode(file_get_contents($this->pathname), true);
     }
 
     /**
@@ -74,7 +74,7 @@ class Filesystem implements CacheInterface
         }
 
         if (is_writable($this->pathname) || is_writable(dirname($this->pathname))) {
-            file_put_contents($this->pathname, serialize($this->data));
+            file_put_contents($this->pathname, json_encode($this->data));
         }
     }
 
@@ -101,7 +101,7 @@ class Filesystem implements CacheInterface
      */
     public function get($key)
     {
-        return array_key_exists($key, $this->data) ? $this->data[$key] : false;
+        return $this->data[$key] ?? false;
     }
 
     /**

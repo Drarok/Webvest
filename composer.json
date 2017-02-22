@@ -9,10 +9,12 @@
     ],
     "autoload": {
         "psr-4": {
+            "Controller\\": "app/src/Controller/",
             "Harvest\\": "app/src/Harvest/"
         }
     },
     "require": {
+        "php": ">=7.0",
         "pimple/pimple": "1.*",
         "guzzle/guzzle": "3.*",
         "twig/twig": "1.*"

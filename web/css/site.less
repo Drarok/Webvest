@@ -1,9 +1,12 @@
 @black: black;
 @silver: rgb(150, 150, 150);
+@pale-blue: rgba(200, 200, 255, 0.2);
+
+@nav-hover-background: @pale-blue;
 
 @event-border-color: #ddd;
 @event-active-border-color: blue;
-@event-latest-background-color: rgba(200, 200, 255, 0.2);
+@event-latest-background-color: @pale-blue;
 @event-text-color: @silver;
 @project-text-color: @black;
 
@@ -12,6 +15,30 @@
 html, body {
   font-family: "Helvetica Neue", "Arial", sans-serif;
 }
+
+nav ul {
+  list-style: none;
+
+  li {
+    display: inline-block;
+
+    a {
+      border: 1px solid silver;
+      padding: 0.5rem;
+      text-decoration: none;
+
+      &:link, &:visited {
+        color: black;
+      }
+
+      &:hover {
+        background: @nav-hover-background;
+        border-color: #5555ff;
+      }
+    }
+  }
+}
+
 
 .box-shadow (@color) {
   -webkit-box-shadow: 5px 5px 5px 0px @color;

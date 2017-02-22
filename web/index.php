@@ -4,29 +4,29 @@ error_reporting(E_ALL);
 
 $app = require_once __DIR__ . '/../app/bootstrap.php';
 
+use Controller\IndexController;
+use Controller\ErrorController;
+
 $app['exceptionHandler']->install();
 
-$data = $app['client']->getDaily();
+// TODO: Use a proper router.
+// $_SERVER['REQUEST_URI'] => string '/'
+// $_SERVER['REQUEST_URI'] => string '/target-hours'
 
-$mostRecentEntryId = false;
-$mostRecentDate = null;
-foreach ($data as $entry) {
-    if ($mostRecentDate === null) {
-        $mostRecentDate = $entry->getUpdatedAt();
-        $mostRecentEntryId = $entry->getId();
-    } else {
-        $entryDate = $entry->getUpdatedAt();
-        if ($entryDate > $mostRecentDate) {
-            $mostRecentDate = $entryDate;
-            $mostRecentEntryId = $entry->getId();
-        }
-    }
+$uri = $_SERVER['REQUEST_URI'] ?? '/';
+
+switch ($uri) {
+    case '/':
+        $controller = new IndexController($app);
+        break;
+
+    case '/target-hours':
+        $controller = new Controller\TargetHoursController($app);
+        break;
+
+    default:
+        $controller = new ErrorController($app, $uri);
+        break;
 }
 
-echo $app['viewService']->render(
-    'index.html.twig',
-    array(
-        'daily'             => $data,
-        'mostRecentEntryId' => $mostRecentEntryId,
-    )
-);
+echo $controller->render();
