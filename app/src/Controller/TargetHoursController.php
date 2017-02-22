@@ -4,15 +4,16 @@ namespace Webvest\Controller;
 
 use DateTime;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class TargetHoursController extends AbstractController
 {
-    public function render(): string
+    public function indexAction(): Response
     {
-        $data = $this->getData();
-        return $this->app['viewService']->render('target-hours.html.twig', $data);
+        return $this->render('target-hours/index.html.twig', $this->getData());
     }
 
-    protected function getData(): array
+    private function getData(): array
     {
         $workingDays = $this->getWorkingDays();
 
@@ -32,7 +33,7 @@ class TargetHoursController extends AbstractController
      *
      * @return array
      */
-    protected function getWorkingDays(): array
+    private function getWorkingDays(): array
     {
         $m = date('m');
         $y = date('Y');
@@ -65,7 +66,7 @@ class TargetHoursController extends AbstractController
         return $workingDays;
     }
 
-    protected function getLoggedHours()
+    private function getLoggedHours()
     {
         $fromDate = DateTime::createFromFormat('Ymd', date('Ym') . '01');
         $toDate = new DateTime();

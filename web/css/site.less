@@ -101,4 +101,40 @@ nav ul {
       color: @active-timer-color;
     }
   }
+
+  .toggle {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+
+    text-indent: 5px;
+    text-align: center;
+
+    border: 1px solid silver;
+    border-radius: 25px;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+
+    &:hover {
+      color: @active-timer-color;
+      border-color: @active-timer-color;
+    }
+
+    .start {
+      font-size: large;
+    }
+
+    .stop {
+      text-indent: 2px;
+      font-size: x-large;
+      margin-top: -2px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
 }

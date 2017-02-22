@@ -36,13 +36,13 @@ class Client
     {
         $this->client = new HttpClient(
             $url,
-            array(
-                HttpClient::REQUEST_OPTIONS => array(
-                    'headers' => array('accept' => 'application/json'),
-                    'auth'    => array($username, $password),
+            [
+                HttpClient::REQUEST_OPTIONS => [
+                    'headers' => ['accept' => 'application/json'],
+                    'auth'    => [$username, $password],
                     'verify'  => false,
-                ),
-            )
+                ],
+            ]
         );
 
         $this->setCache($cache);
@@ -79,6 +79,27 @@ class Client
         }
 
         return new Daily($json);
+    }
+
+    /**
+     * Toggle a "daily" timer.
+     *
+     * @param DateTime $date    Date of the entry
+     * @param int      $entryId The id of the entry
+     *
+     * @return void
+     */
+    public function toggleTimer(DateTime $date, int $entryId)
+    {
+        $path = sprintf(
+            '/daily/timer/%d',
+            $entryId
+        );
+
+        $this->client->get($path)->send();
+
+        $cacheKey = 'daily-' . $date->format('Y-m-d');
+        $this->cache->delete($cacheKey);
     }
 
     /**

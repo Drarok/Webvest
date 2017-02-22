@@ -291,7 +291,7 @@ class Entry
         $decimalHours = $this->getHours();
 
         $hours = floor($decimalHours);
-        $minutes = 60 * ($decimalHours - $hours);
+        $minutes = round(60 * ($decimalHours - $hours));
 
         return sprintf(
             '%d:%02d',

@@ -14,6 +14,14 @@
             {% else %}
                 <div class="timer" title="{{ entry.hours }}">{{ entry.time }}</div>
             {% endif %}
+
+            <div class="toggle">
+                {% if entry.timerStartedAt %}
+                    <div class="stop"><a href="/timers/toggle?date={{ entry.date|date('Y-m-d') }}&id={{ entry.id }}">&#9632;</a></div>
+                {% else %}
+                    <div class="start"><a href="/timers/toggle?date={{ entry.date|date('Y-m-d') }}&id={{ entry.id }}">&#9654;</a></div>
+                {% endif %}
+            </div>
         </div>
     {% endfor %}
 {% endblock %}

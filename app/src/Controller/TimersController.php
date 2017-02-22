@@ -4,11 +4,30 @@ namespace Webvest\Controller;
 
 use DateTime;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 class TimersController extends AbstractController
 {
-    public function indexAction(): string
+    public function indexAction(): Response
     {
-        return $this->render('index.html.twig', $this->getData());
+        return $this->render('timers/index.html.twig', $this->getData());
+    }
+
+    public function toggleAction(Request $request): Response
+    {
+        $date = $request->query->get('date', '');
+        $id = intval($request->query->get('id', '0'));
+
+        $date = DateTime::createFromFormat('Y-m-d', $date);
+        if (!$date || !$id) {
+            throw new InvalidArgumentException('Invalid request');
+        }
+
+        $client = $this->app['client'];
+        $client->toggleTimer($date, $id);
+        return new RedirectResponse('/');
     }
 
     private function getCurrentDate(): DateTime
