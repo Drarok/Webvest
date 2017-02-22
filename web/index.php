@@ -4,8 +4,9 @@ error_reporting(E_ALL);
 
 $app = require_once __DIR__ . '/../app/bootstrap.php';
 
-use Controller\IndexController;
-use Controller\ErrorController;
+use Webvest\Controller\IndexController;
+use Webvest\Controller\ErrorController;
+use Webvest\Controller\TargetHoursController;
 
 $app['exceptionHandler']->install();
 
@@ -21,7 +22,7 @@ switch ($uri) {
         break;
 
     case '/target-hours':
-        $controller = new Controller\TargetHoursController($app);
+        $controller = new TargetHoursController($app);
         break;
 
     default:

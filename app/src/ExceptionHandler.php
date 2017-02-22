@@ -1,8 +1,8 @@
 <?php
 
-namespace Harvest\Exception;
+namespace Webvest;
 
-class Handler
+class ExceptionHandler
 {
     protected $app;
 

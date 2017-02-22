@@ -1,6 +1,6 @@
 <?php
 
-namespace Harvest;
+namespace Webvest\Harvest;
 
 use DateTime;
 

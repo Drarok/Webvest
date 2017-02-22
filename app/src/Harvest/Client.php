@@ -1,12 +1,12 @@
 <?php
 
-namespace Harvest;
+namespace Webvest\Harvest;
 
 use DateTime;
 
 use Guzzle\Http\Client as HttpClient;
 
-use Harvest\Cache\CacheInterface;
+use Webvest\Harvest\Cache\CacheInterface;
 
 class Client
 {

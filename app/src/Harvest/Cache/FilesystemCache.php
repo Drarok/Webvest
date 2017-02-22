@@ -1,8 +1,8 @@
 <?php
 
-namespace Harvest\Cache;
+namespace Webvest\Harvest\Cache;
 
-class Filesystem implements CacheInterface
+class FilesystemCache implements CacheInterface
 {
     /**
      * Pathname to save the data to.
