@@ -21,14 +21,18 @@ class TimersController extends AbstractController
     {
         $date = $request->query->get('date', '');
         $id = intval($request->query->get('id', '0'));
+        $state = $request->query->get('state', '');
 
         $date = DateTime::createFromFormat('Y-m-d', $date);
-        if (!$date || !$id) {
-            throw new InvalidArgumentException('Invalid request');
+        if (!$date || !$id || ($state !== DataService::STATE_STARTED && $state !== DataService::STATE_STOPPED)) {
+            throw new \InvalidArgumentException('Invalid request');
         }
 
         $client = $this->app['client'];
         $client->toggleTimer($date, $id);
+
+        $this->app['dataService']->addInterruption($id, $state);
+
         return new RedirectResponse('/');
     }
 

@@ -23,6 +23,19 @@ class DataService
         $this->createTables();
     }
 
+    public function addInterruption(int $entryId, string $state)
+    {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO "interruptions" ("entryId", "time", "state") VALUES (:entryId, :time, :state)'
+        );
+
+        $stmt->execute([
+            'entryId' => $entryId,
+            'time' => (new DateTime())->format('Y-m-d H:i:s'),
+            'state' => $state,
+        ]);
+    }
+
     public function getInterruptions(int $entryId, string $state = null): array
     {
         $sql = 'SELECT * FROM "interruptions" WHERE "entryId" = :entryId';
