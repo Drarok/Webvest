@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use Webvest\DataService;
+
 class TimersController extends AbstractController
 {
     public function indexAction(): Response
@@ -46,9 +48,15 @@ class TimersController extends AbstractController
     {
         $daily = $this->app['client']->getDaily($this->getCurrentDate());
 
+        $dataService = $this->app['dataService'];
+
         $mostRecentEntryId = false;
         $mostRecentDate = null;
-        foreach ($daily->getDayEntries() as $entry) {
+        $entries = $daily->getDayEntries();
+        foreach ($entries as $entry) {
+            // Load the interruption data.
+            $entry->setInterruptions($dataService->getInterruptions($entry->getId(), DataService::STATE_STOPPED));
+
             if ($mostRecentDate === null) {
                 $mostRecentDate = $entry->getUpdatedAt();
                 $mostRecentEntryId = $entry->getId();
@@ -61,8 +69,9 @@ class TimersController extends AbstractController
             }
         }
 
+
         return [
-            'daily'             => $daily,
+            'entries'           => $entries,
             'mostRecentEntryId' => $mostRecentEntryId,
         ];
     }

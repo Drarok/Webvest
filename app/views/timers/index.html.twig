@@ -1,7 +1,7 @@
 {% extends 'templates/default.html.twig' %}
 
 {% block content %}
-    {% for entry in daily.dayEntries %}
+    {% for entry in entries %}
         <div class="entry {% if entry.timerStartedAt %}active{% endif %} {% if entry.id == mostRecentEntryId %}latest-entry{% endif %}">
             <div class="client">{{ entry.client }}</div>
             <div class="project" title="{{ entry.projectId }}">{{ entry.project }}</div>
@@ -15,11 +15,17 @@
                 <div class="timer" title="{{ entry.hours }}">{{ entry.time }}</div>
             {% endif %}
 
+            <div class="interruptions">
+                {% set cnt = entry.interruptions|length %}
+                {% set noun = cnt == 1 ? 'interruption' : 'interruptions' %}
+                {{ cnt }} {{ noun }}
+            </div>
+
             <div class="toggle">
                 {% if entry.timerStartedAt %}
-                    <div class="stop"><a href="/timers/toggle?date={{ entry.date|date('Y-m-d') }}&id={{ entry.id }}">&#9632;</a></div>
+                    <div class="stop"><a href="/timers/toggle?date={{ entry.date|date('Y-m-d') }}&id={{ entry.id }}&state=stopped">&#9632;</a></div>
                 {% else %}
-                    <div class="start"><a href="/timers/toggle?date={{ entry.date|date('Y-m-d') }}&id={{ entry.id }}">&#9654;</a></div>
+                    <div class="start"><a href="/timers/toggle?date={{ entry.date|date('Y-m-d') }}&id={{ entry.id }}&state=started">&#9654;</a></div>
                 {% endif %}
             </div>
         </div>

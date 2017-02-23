@@ -2,10 +2,14 @@
 
 namespace Webvest;
 
+use DateTime;
 use PDO;
 
 class DataService
 {
+    const STATE_STARTED = 'started';
+    const STATE_STOPPED = 'stopped';
+
     private $pdo;
 
     public function __construct($path)
@@ -19,12 +23,35 @@ class DataService
         $this->createTables();
     }
 
+    public function getInterruptions(int $entryId, string $state = null): array
+    {
+        $sql = 'SELECT * FROM "interruptions" WHERE "entryId" = :entryId';
+        $params = [
+            'entryId' => $entryId,
+        ];
+
+        if ($state) {
+            $sql .= ' AND "state" = :state';
+            $params['state'] = $state;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        $result = [];
+        while ($row = $stmt->fetch()) {
+            $result[] = $row;
+        }
+
+        return $result;
+    }
+
     private function createTables()
     {
         $stmt = $this->pdo->prepare('SELECT COUNT(*) AS cnt FROM sqlite_master WHERE type=:type AND name = :name');
         $stmt->execute([
             'type' => 'table',
-            'name' => 'timers',
+            'name' => 'interruptions',
         ]);
 
         $row = $stmt->fetch();
@@ -34,6 +61,15 @@ class DataService
             return;
         }
 
-        // TODO: Create the schema here.
+        $this->pdo->query(implode(' ', [
+            'CREATE TABLE "interruptions" (',
+            '"id" INTEGER PRIMARY KEY AUTOINCREMENT,',
+            '"entryId" INTEGER NOT NULL,',
+            '"time" TEXT NOT NULL,',
+            '"state" TEXT NOT NULL',
+            ')',
+        ]));
+
+        $this->pdo->query('CREATE INDEX "interruptions:entryId" ON "interruptions" ("entryId")');
     }
 }

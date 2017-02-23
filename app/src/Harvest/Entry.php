@@ -97,6 +97,13 @@ class Entry
      */
     protected $hours;
 
+    /**
+     * Interruption information.
+     *
+     * @var array
+     */
+    protected $interruptions = [];
+
     public function __construct(array $data)
     {
         if (isset($data['timer_started_at'])) {
@@ -298,5 +305,28 @@ class Entry
             $hours,
             $minutes
         );
+    }
+
+    /**
+     * Sets the Interruption information.
+     *
+     * @param array $interruptions the interruptions
+     *
+     * @return self
+     */
+    public function setInterruptions(array $interruptions)
+    {
+        $this->interruptions = $interruptions;
+        return $this;
+    }
+
+    /**
+     * Gets the Interruption information.
+     *
+     * @return array
+     */
+    public function getInterruptions(): array
+    {
+        return $this->interruptions;
     }
 }
